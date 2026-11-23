@@ -9,7 +9,7 @@ import os
 
 ENTRY = (
     "My plants died even though I bought them a self-watering pot, "
-    "which only means they drown on a schedule now."
+    "which turns out just means they drown on a schedule."
 )
 
 
@@ -21,6 +21,7 @@ def _validate(text: str) -> None:
     assert 1 <= len(text) <= 200, f"entry is {len(text)} chars, must be 1-200"
     encoded = text.encode("utf-8")  # raises if not encodable as UTF-8
     assert encoded.decode("utf-8") == text, "entry is not valid UTF-8 round-trip"
+    assert text == text.strip(), "entry must not start or end with whitespace"
 
 
 def main() -> None:
@@ -33,7 +34,10 @@ def main() -> None:
     with open(path, "r", encoding="utf-8") as f:
         written = f.read()
     assert written == ENTRY + "\n", "written file does not match entry"
-    print(f"Wrote {len(ENTRY)}-character entry to {path}")
+    print(
+        f"Wrote {len(ENTRY)}-character "
+        f"({len(ENTRY.encode('utf-8'))}-byte) entry to {path}"
+    )
 
 
 if __name__ == "__main__":
